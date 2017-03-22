@@ -23,6 +23,9 @@ public class SensorUnavailableMarker {
 
 	public final List<MarkedDataPoints> markedWindows;
 
+	long startTimeTmp = Util.getStartDayTime(1488208967076l);
+	long endTimeTmp = Util.getEndDayTime(1488760488997l);
+
 	public SensorUnavailableMarker() {
 		markedWindows = new ArrayList<MarkedDataPoints>();
 	}
@@ -43,9 +46,9 @@ public class SensorUnavailableMarker {
 		long timestamp = 0;
 		int size;
 
-		accelerometerX = dataLoader.loadCSV(SampleData.AUTOSENSE_ACCELEROMETER_X);
-		accelerometerY = dataLoader.loadCSV(SampleData.AUTOSENSE_ACCELEROMETER_Y);
-		accelerometerZ = dataLoader.loadCSV(SampleData.AUTOSENSE_ACCELEROMETER_Z);
+		accelerometerX = dataLoader.loadCSV(SampleData.AUTOSENSE_ACCELEROMETER_X, startTimeTmp, endTimeTmp);
+		accelerometerY = dataLoader.loadCSV(SampleData.AUTOSENSE_ACCELEROMETER_Y, startTimeTmp, endTimeTmp);
+		accelerometerZ = dataLoader.loadCSV(SampleData.AUTOSENSE_ACCELEROMETER_Z, startTimeTmp, endTimeTmp);
 
 		size = Math.max(Math.max(accelerometerX.size(), accelerometerY.size()), accelerometerZ.size());
 
@@ -85,7 +88,7 @@ public class SensorUnavailableMarker {
 		DataLoader dataLoader = new DataLoader();
 		List<DataPoints> accelerometerMagnitude = new ArrayList<DataPoints>();
 
-		accelerometerMagnitude = dataLoader.loadWristCSV(SampleData.MOTIONSENSE_ACCELEROMETER);
+		accelerometerMagnitude = dataLoader.loadWristCSV(SampleData.MOTIONSENSE_ACCELEROMETER, startTimeTmp, endTimeTmp);
 
 		WirelessDC((List<DataPoints>) accelerometerMagnitude, markedWindows);
 

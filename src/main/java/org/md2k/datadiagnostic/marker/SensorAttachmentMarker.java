@@ -29,7 +29,7 @@ public class SensorAttachmentMarker {
 		long startTime = 0, endTime = 0;
 		List<Double> tmp = new ArrayList<Double>();
 		List<DataPoints> galvanicSkingResponse = new ArrayList<DataPoints>();
-		galvanicSkingResponse = dataLoader.loadCSV(SampleData.AUTOSENSE_GSR);
+		galvanicSkingResponse = dataLoader.loadCSV(SampleData.AUTOSENSE_GSR, 1488208967076l, 1488760488997l);
 		
 		for (int i = 0; i < markedWindows.size(); i++) {
 			if (markedWindows.get(i).getQuality() == 999) {

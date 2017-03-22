@@ -47,27 +47,27 @@ public class DiagnoseData {
 		//long endTime = Util.getEndDayTime(1479951776137l);
 
 		if (DDT_PARAMETERS.STREAM_NAME.equals("rip")) {
-			phoneBatteryData = dataLoader.loadCSV(SampleData.PHONE_BATTERY);
-			sensorBatteryData = dataLoader.loadCSV(SampleData.AUTOSENSE_BATTERY);
+			phoneBatteryData = dataLoader.loadCSV(SampleData.PHONE_BATTERY, startTime, endTime);
+			sensorBatteryData = dataLoader.loadCSV(SampleData.AUTOSENSE_BATTERY, startTime, endTime);
 
 			samplingRate = DDT_PARAMETERS.RESPIRATION_SAMPLING_RATE;
-			sensorData = dataLoader.loadCSV(SampleData.RIP_DATA);
+			sensorData = dataLoader.loadCSV(SampleData.RIP_DATA, startTime, endTime);
 			fixedSizeWindowing.blankWindows(sensorData, startTime, endTime, DDT_PARAMETERS.WINDOW_SIZE);
 			diagnoseRIPData();
 		} else if (DDT_PARAMETERS.STREAM_NAME.equals("ecg")) {
-			phoneBatteryData = dataLoader.loadCSV(SampleData.PHONE_BATTERY);
-			sensorBatteryData = dataLoader.loadCSV(SampleData.AUTOSENSE_BATTERY);
+			phoneBatteryData = dataLoader.loadCSV(SampleData.PHONE_BATTERY, startTime, endTime);
+			sensorBatteryData = dataLoader.loadCSV(SampleData.AUTOSENSE_BATTERY, startTime, endTime);
 			
 			samplingRate = DDT_PARAMETERS.ECG_SAMPLING_RATE;
-			sensorData = dataLoader.loadCSV(SampleData.ECG_DATA);
+			sensorData = dataLoader.loadCSV(SampleData.ECG_DATA, startTime, endTime);
 			fixedSizeWindowing.blankWindows(sensorData, startTime, endTime, DDT_PARAMETERS.WINDOW_SIZE);
 			diagnoseECGData();
 		}else if (DDT_PARAMETERS.STREAM_NAME.equals("motionsense")) {
-			phoneBatteryData = dataLoader.loadCSV(SampleData.PHONE_BATTERY);
-			sensorBatteryData = dataLoader.loadCSV(SampleData.MOTIONSENSE_BATTERY);
+			phoneBatteryData = dataLoader.loadCSV(SampleData.PHONE_BATTERY, startTime, endTime);
+			sensorBatteryData = dataLoader.loadCSV(SampleData.MOTIONSENSE_BATTERY, startTime, endTime);
 			
 			samplingRate = DDT_PARAMETERS.MOTIONSENSE_SAMPLING_RATE;
-			sensorData = dataLoader.loadWristCSV(SampleData.MOTIONSENSE_ACCELEROMETER);
+			sensorData = dataLoader.loadWristCSV(SampleData.MOTIONSENSE_ACCELEROMETER, startTime, endTime);
 			fixedSizeWindowing.blankWindows(sensorData, startTime, endTime, DDT_PARAMETERS.WINDOW_SIZE);
 			diagnoseMotionsenseData();
 		} 

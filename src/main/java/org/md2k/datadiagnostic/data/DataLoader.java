@@ -12,9 +12,9 @@ public class DataLoader {
 	 * @param csvFileName . 
 	 * @return {@link DataPoints}
 	 */
-	public List<DataPoints> loadCSV(String csvFileName){
+	public List<DataPoints> loadCSV(String csvFileName, long startTime, long endTime){
 		CSVParser csvParser = new CSVParser();	
-		return csvParser.importData(csvFileName);
+		return csvParser.importData(csvFileName, startTime, endTime);
 	}
 	
 	/**
@@ -22,8 +22,8 @@ public class DataLoader {
 	 * @param csvFileName
 	 * @return {@link DataPoints}
 	 */
-	public List<DataPoints> loadWristCSV(String csvFileName){
+	public List<DataPoints> loadWristCSV(String csvFileName, long startTime, long endTime){
 		CSVParser csvParser = new CSVParser();	
-		return csvParser.importWristData(csvFileName);
+		return csvParser.importWristData(csvFileName, startTime, endTime);
 	}
 }

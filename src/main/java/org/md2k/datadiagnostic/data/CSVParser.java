@@ -21,7 +21,7 @@ public class CSVParser implements Iterable<DataPoints> {
      * @param filename CSV file name.
      * @return {@link DataPoints}
      */
-    public List<DataPoints> importData(String filename) {
+    public List<DataPoints> importData(String filename, long startTime, long endTime) {
 
         DataPoints tempPacket;
 
@@ -37,10 +37,13 @@ public class CSVParser implements Iterable<DataPoints> {
                 tokens = scanner.nextLine().split(",");
                 double ts = Double.parseDouble(tokens[0]);
                 timestamp = (long) ts;
-                data = Double.parseDouble(tokens[2]);
+                if(timestamp>startTime && timestamp<endTime){
+                    data = Double.parseDouble(tokens[2]);
 
-                tempPacket = new DataPoints(timestamp, data);
-                this.data.add(tempPacket);
+                    tempPacket = new DataPoints(timestamp, data);
+                    this.data.add(tempPacket);
+                }
+
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -55,7 +58,7 @@ public class CSVParser implements Iterable<DataPoints> {
      * @param filename CSV file name.
      * @return {@link DataPoints}
      */
-    public List<DataPoints> importWristData(String filename) {
+    public List<DataPoints> importWristData(String filename, long startTime, long endTime) {
 
         DataPoints tempPacket;
 
@@ -71,10 +74,11 @@ public class CSVParser implements Iterable<DataPoints> {
                 tokens = scanner.nextLine().split(",");
                 double ts = Double.parseDouble(tokens[0]);
                 timestamp = (long) ts;
-                //data = Double.parseDouble(tokens[2]);
-                double magnitude = Math.sqrt(Math.pow(Double.parseDouble(tokens[2]), 2) + Math.pow(Double.parseDouble(tokens[3]), 2) + Math.pow(Double.parseDouble(tokens[4]), 2));
-                tempPacket = new DataPoints(timestamp, magnitude);
-                this.data.add(tempPacket);
+                if(timestamp>startTime && timestamp<endTime) {
+                    double magnitude = Math.sqrt(Math.pow(Double.parseDouble(tokens[2]), 2) + Math.pow(Double.parseDouble(tokens[3]), 2) + Math.pow(Double.parseDouble(tokens[4]), 2));
+                    tempPacket = new DataPoints(timestamp, magnitude);
+                    this.data.add(tempPacket);
+                }
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
