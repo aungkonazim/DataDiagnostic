@@ -23,8 +23,8 @@ public class SensorUnavailableMarker {
 
 	public final List<MarkedDataPoints> markedWindows;
 
-	long startTimeTmp = Util.getStartDayTime(1488208967076l);
-	long endTimeTmp = Util.getEndDayTime(1488760488997l);
+	long startTimeTmp = Util.getStartDayTime(1489051974250l);
+	long endTimeTmp = Util.getEndDayTime(1489404734171l);
 
 	public SensorUnavailableMarker() {
 		markedWindows = new ArrayList<MarkedDataPoints>();

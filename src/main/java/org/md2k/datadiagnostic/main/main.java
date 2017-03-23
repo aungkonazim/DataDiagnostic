@@ -13,8 +13,8 @@ public class main {
 	 */
 	public static void main(String[] args) {
 
-		long startTime = Util.getStartDayTime(1488208967076l);
-		long endTime = Util.getEndDayTime(1488760488997l);
+		long startTime = Util.getStartDayTime(1489051974250l);
+		long endTime = Util.getEndDayTime(1489404734171l);
 
 		new DiagnoseData(startTime, endTime);
 
