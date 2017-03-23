@@ -5,7 +5,6 @@ import org.md2k.datadiagnostic.data.DataLoader;
 import org.md2k.datadiagnostic.struct.DataPoints;
 import org.md2k.datadiagnostic.struct.MarkedDataPoints;
 import org.md2k.datadiagnostic.util.DataStatistics;
-import org.md2k.datadiagnostic.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,8 +17,8 @@ public class SensorUnavailableMarker {
 
     public final List<MarkedDataPoints> markedWindows;
 
-    long startTime = Util.getStartDayTime(1489051974250l);
-    long endTime = Util.getEndDayTime(1489404734171l);
+    long startTime;
+    long endTime;
 
     public SensorUnavailableMarker(long startTime, long endTime) {
         markedWindows = new ArrayList<MarkedDataPoints>();
@@ -123,7 +122,7 @@ public class SensorUnavailableMarker {
                     // only checks 1 minutes window before a disconnection
                     // happens
                     if (accelerometer.get(j).getStartTimestamp() <= startDCTime
-                            && accelerometer.get(j).getStartTimestamp() >= (startDCTime - 60000)) {
+                            && accelerometer.get(j).getStartTimestamp() >= (startDCTime - Double.parseDouble(Config.get("WINDOW_SIZE")))) {
                         tmp.add(accelerometer.get(j).getValue());
                     }
                 }

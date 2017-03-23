@@ -21,6 +21,7 @@ public class VarianceBasedDataQuality {
     public int dataQualityMarker(List<DataPoints> timestampsAndValues) {
         List<Double> normalValues = new ArrayList<Double>();
         List<Double> values = new ArrayList<Double>();
+        double varianceThreshold=0;
 
         for (int i = 0; i < timestampsAndValues.size(); i++) {
             values.add(timestampsAndValues.get(i).getValue());
@@ -35,8 +36,13 @@ public class VarianceBasedDataQuality {
         DataStatistics statistics2 = new DataStatistics(normalValues);
         double variance = statistics2.getVariance();
 
-        if (variance < Double.parseDouble(Config.get("VARIANCE_THRESHOLD"))) {
-            System.out.println("Off-body   -> " + variance);
+        if (Config.get("STREAM_NAME").equals("rip") || Config.get("STREAM_NAME").equals("ecg")){
+            varianceThreshold = Double.parseDouble(Config.get("AUTOSENSE_VARIANCE_THRESHOLD"));
+        }else{
+            varianceThreshold = Double.parseDouble(Config.get("MOTIONSENSE_VARIANCE_THRESHOLD"));
+        }
+
+        if (variance < varianceThreshold) {
             return Integer.parseInt(Config.get("SENSOR_OFF_BODY"));
         }
         return Integer.parseInt(Config.get("SENSOR_ON_BODY"));

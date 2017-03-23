@@ -7,6 +7,7 @@ import org.md2k.datadiagnostic.struct.MarkedDataPoints;
 import org.md2k.datadiagnostic.util.DataStatistics;
 
 import java.util.ArrayList;
+import java.util.DoubleSummaryStatistics;
 import java.util.List;
 
 public class SensorAttachmentMarker {
@@ -47,10 +48,10 @@ public class SensorAttachmentMarker {
                     }
                 }
                 DataStatistics statistics = new DataStatistics(tmp);
-                if (statistics.median() < 750) {
+                if (statistics.median() < Double.parseDouble(Config.get("IMPROPER_ATTACHMENT_THRESHOLD")) ) {
                     markedWindows.get(i).setQuality(Integer.parseInt(Config.get("IMPROPER_ATTACHMENT")));
                 }
-                if (statistics.median() > 1800) {
+                if (statistics.median() > Double.parseDouble(Config.get("SENSOR_OFF_BODY_THRESHOLD"))) {
                     markedWindows.get(i).setQuality(Integer.parseInt(Config.get("SENSOR_OFF_BODY")));
                 }
             }
@@ -115,6 +116,7 @@ public class SensorAttachmentMarker {
 
                 for (int k = 0; k < markedWindows.get(i).getDataPoints().size(); k++) {
                     tmp.add(markedWindows.get(i).getDataPoints().get(k).getValue());
+
                     if (markedWindows.get(i).getDataPoints().get(k).getValue() > 3999
                             || markedWindows.get(i).getDataPoints().get(k).getValue() < 50) {
                         badPeaks++;
