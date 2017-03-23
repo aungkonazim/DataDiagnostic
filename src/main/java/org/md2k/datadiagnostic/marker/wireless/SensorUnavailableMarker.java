@@ -1,8 +1,6 @@
 package org.md2k.datadiagnostic.marker.wireless;
 
-import demo.SampleData;
-import org.md2k.datadiagnostic.configurations.DDT_PARAMETERS;
-import org.md2k.datadiagnostic.configurations.METADATA;
+import org.md2k.datadiagnostic.configurations.Config;
 import org.md2k.datadiagnostic.data.DataLoader;
 import org.md2k.datadiagnostic.struct.DataPoints;
 import org.md2k.datadiagnostic.struct.MarkedDataPoints;
@@ -45,9 +43,9 @@ public class SensorUnavailableMarker {
         long timestamp = 0;
         int size;
 
-        accelerometerX = dataLoader.loadCSV(SampleData.AUTOSENSE_ACCELEROMETER_X, this.startTime, this.endTime);
-        accelerometerY = dataLoader.loadCSV(SampleData.AUTOSENSE_ACCELEROMETER_Y, this.startTime, this.endTime);
-        accelerometerZ = dataLoader.loadCSV(SampleData.AUTOSENSE_ACCELEROMETER_Z, this.startTime, this.endTime);
+        accelerometerX = dataLoader.loadCSV(Config.get("AUTOSENSE_ACCELEROMETER_X"), this.startTime, this.endTime);
+        accelerometerY = dataLoader.loadCSV(Config.get("AUTOSENSE_ACCELEROMETER_Y"), this.startTime, this.endTime);
+        accelerometerZ = dataLoader.loadCSV(Config.get("AUTOSENSE_ACCELEROMETER_Z"), this.startTime, this.endTime);
 
         size = Math.max(Math.max(accelerometerX.size(), accelerometerY.size()), accelerometerZ.size());
 
@@ -87,7 +85,7 @@ public class SensorUnavailableMarker {
         DataLoader dataLoader = new DataLoader();
         List<DataPoints> accelerometerMagnitude = new ArrayList<DataPoints>();
 
-        accelerometerMagnitude = dataLoader.loadWristCSV(SampleData.MOTIONSENSE_ACCELEROMETER, this.startTime, this.endTime);
+        accelerometerMagnitude = dataLoader.loadWristCSV(Config.get("MOTIONSENSE_ACCELEROMETER"), this.startTime, this.endTime);
 
         WirelessDC((List<DataPoints>) accelerometerMagnitude, markedWindows);
 
@@ -110,14 +108,14 @@ public class SensorUnavailableMarker {
 
         // decide threshold based on sensor type
         if (stackTraceElements[2].getMethodName().equals("autoSenseWirelessDC")) {
-            threshold = DDT_PARAMETERS.VARIANCE_THRESHOLD_AUTOSENSE_UNAVAILABLE;
+            threshold = Double.parseDouble(Config.get("VARIANCE_THRESHOLD_AUTOSENSE_UNAVAILABLE"));
         } else if (stackTraceElements[2].getMethodName().equals("motionsenseWirelessDC")) {
-            threshold = DDT_PARAMETERS.VARIANCE_THRESHOLD_MOTIONSENSE_UNAVAILABLE;
+            threshold = Double.parseDouble(Config.get("VARIANCE_THRESHOLD_MOTIONSENSE_UNAVAILABLE"));
         }
 
         for (int i = 0; i < markedWindows.size(); i++) {
-            if (markedWindows.get(i).getQuality() == METADATA.SENSOR_POWERED_OFF) {
-                if (markedWindows.get(i - 1).getQuality() != METADATA.SENSOR_POWERED_OFF) {
+            if (markedWindows.get(i).getQuality() == Integer.parseInt(Config.get("SENSOR_POWERED_OFF"))) {
+                if (markedWindows.get(i - 1).getQuality() != Integer.parseInt(Config.get("SENSOR_POWERED_OFF"))) {
                     // start disconnection time
                     startDCTime = markedWindows.get(i).getDataPoints().get(0).getStartTimestamp();
                 }
@@ -131,16 +129,16 @@ public class SensorUnavailableMarker {
                 }
 
                 DataStatistics statistics = new DataStatistics(tmp);
-                if (markedWindows.get(i).getQuality() == METADATA.SENSOR_POWERED_OFF
-                        && markedWindows.get(i - 1).getQuality() != METADATA.SENSOR_POWERED_OFF) {
+                if (markedWindows.get(i).getQuality() == Integer.parseInt(Config.get("SENSOR_POWERED_OFF"))
+                        && markedWindows.get(i - 1).getQuality() != Integer.parseInt(Config.get("SENSOR_POWERED_OFF"))) {
                     System.out.println(startDCTime + " - " + tmp.size() + " - " + statistics.getVariance());
                 }
                 if (statistics.getVariance() > threshold) {
                     for (int k = i; k < markedWindows.size() - 1; k++) {
-                        if (markedWindows.get(k).getQuality() != METADATA.SENSOR_POWERED_OFF) {
+                        if (markedWindows.get(k).getQuality() != Integer.parseInt(Config.get("SENSOR_POWERED_OFF"))) {
                             break;
                         } else {
-                            markedWindows.get(k).setQuality(METADATA.SENSOR_UNAVAILABLE);
+                            markedWindows.get(k).setQuality(Integer.parseInt(Config.get("SENSOR_UNAVAILABLE")));
                         }
                     }
 

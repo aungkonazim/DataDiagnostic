@@ -1,7 +1,6 @@
 package org.md2k.datadiagnostic.marker;
 
-import demo.SampleData;
-import org.md2k.datadiagnostic.configurations.METADATA;
+import org.md2k.datadiagnostic.configurations.Config;
 import org.md2k.datadiagnostic.data.DataLoader;
 import org.md2k.datadiagnostic.struct.DataPoints;
 import org.md2k.datadiagnostic.struct.MarkedDataPoints;
@@ -15,6 +14,7 @@ public class SensorAttachmentMarker {
     public final List<MarkedDataPoints> markedWindows;
     long startTime;
     long endTime;
+
     public SensorAttachmentMarker(long startTime, long endTime) {
         markedWindows = new ArrayList<MarkedDataPoints>();
         this.startTime = startTime;
@@ -32,7 +32,7 @@ public class SensorAttachmentMarker {
         long startTime = 0, endTime = 0;
         List<Double> tmp = new ArrayList<Double>();
         List<DataPoints> galvanicSkingResponse = new ArrayList<DataPoints>();
-        galvanicSkingResponse = dataLoader.loadCSV(SampleData.AUTOSENSE_GSR, this.startTime, this.endTime);
+        galvanicSkingResponse = dataLoader.loadCSV(Config.get("AUTOSENSE_GSR"), this.startTime, this.endTime);
 
         for (int i = 0; i < markedWindows.size(); i++) {
             if (markedWindows.get(i).getQuality() == 999) {
@@ -48,10 +48,10 @@ public class SensorAttachmentMarker {
                 }
                 DataStatistics statistics = new DataStatistics(tmp);
                 if (statistics.median() < 750) {
-                    markedWindows.get(i).setQuality(METADATA.IMPROPER_ATTACHMENT);
+                    markedWindows.get(i).setQuality(Integer.parseInt(Config.get("IMPROPER_ATTACHMENT")));
                 }
                 if (statistics.median() > 1800) {
-                    markedWindows.get(i).setQuality(METADATA.SENSOR_OFF_BODY);
+                    markedWindows.get(i).setQuality(Integer.parseInt(Config.get("SENSOR_OFF_BODY")));
                 }
             }
 
@@ -83,11 +83,11 @@ public class SensorAttachmentMarker {
                 }
                 double avg = (badPeaks) / markedWindows.get(i).getDataPoints().size();
                 if (avg > 0.95) {
-                    markedWindows.get(i).setQuality(METADATA.SENSOR_OFF_BODY);
+                    markedWindows.get(i).setQuality(Integer.parseInt(Config.get("SENSOR_OFF_BODY")));
                 } else {
                     DataStatistics statistics = new DataStatistics(tmp);
                     if (statistics.median() > 3800) {
-                        markedWindows.get(i).setQuality(METADATA.IMPROPER_ATTACHMENT);
+                        markedWindows.get(i).setQuality(Integer.parseInt(Config.get("IMPROPER_ATTACHMENT")));
                     }
 
                 }
@@ -124,11 +124,11 @@ public class SensorAttachmentMarker {
                 }
                 double avg = (badPeaks) / markedWindows.get(i).getDataPoints().size();
                 if (avg > 0.95) {
-                    markedWindows.get(i).setQuality(METADATA.SENSOR_OFF_BODY);
+                    markedWindows.get(i).setQuality(Integer.parseInt(Config.get("SENSOR_OFF_BODY")));
                 } else {
                     DataStatistics statistics = new DataStatistics(tmp);
                     if (statistics.median() > 3800) {
-                        markedWindows.get(i).setQuality(METADATA.IMPROPER_ATTACHMENT);
+                        markedWindows.get(i).setQuality(Integer.parseInt(Config.get("IMPROPER_ATTACHMENT")));
                     }
 
                 }

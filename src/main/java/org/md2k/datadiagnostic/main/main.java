@@ -1,23 +1,23 @@
 /**
- * 
+ *
  */
 package org.md2k.datadiagnostic.main;
 
-import demo.SampleData;
+import org.md2k.datadiagnostic.configurations.Config;
 import org.md2k.datadiagnostic.util.Util;
 
 public class main {
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
+    /**
+     * @param args
+     */
+    public static void main(String[] args) {
 
-		long startTime = Util.getStartDayTime(1489051974250l);
-		long endTime = Util.getEndDayTime(1489404734171l);
+        long startTime = Util.getStartDayTime(Long.parseLong(Config.get("START_TIME")));
+        long endTime = Util.getStartDayTime(Long.parseLong(Config.get("END_TIME")));
 
-		new DiagnoseData(startTime, endTime);
+        new DiagnoseData(startTime, endTime);
 
-		System.out.println("Diagnostic results are in: "+SampleData.OUTPUT_PATH);
-	}
+        System.out.println("Diagnostic results are in: " + Config.get("OUTPUT_PATH"));
+    }
 }
