@@ -32,19 +32,15 @@ public class DiagnoseData {
     /**
      * Load data and create blank windows for a period of 24 hours
      */
-    public DiagnoseData(long startTime, long endTime) {
+    public DiagnoseData(long startTime1, long endTime1) {
         sensorData = new ArrayList<DataPoints>();
         phoneBatteryData = new ArrayList<DataPoints>();
         sensorBatteryData = new ArrayList<DataPoints>();
         fixedSizeWindowing = new FixedSizeWindowing();
         dataLoader = new DataLoader();
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.startTime = startTime1;
+        this.endTime = endTime1;
 
-        //in future, get this information from a database
-        //TODO
-        //long startTime = Util.getStartDayTime(1479491476135l);
-        //long endTime = Util.getEndDayTime(1479951776137l);
 
         if (Config.get("STREAM_NAME").equals("rip")) {
             phoneBatteryData = dataLoader.loadCSV(Config.get("PHONE_BATTERY"), startTime, endTime);

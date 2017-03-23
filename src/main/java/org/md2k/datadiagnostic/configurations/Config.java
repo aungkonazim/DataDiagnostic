@@ -9,8 +9,7 @@ import java.util.Properties;
 public class Config {
     public static void main(String[] args) {
 
-        System.out.println(get("startTime"));
-        System.out.println(get("endTime"));
+        System.out.println(get("PHONE_BATTERY"));
 
     }
 

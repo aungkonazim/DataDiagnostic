@@ -28,6 +28,7 @@ public class FixedSizeWindowing {
 	 * @param size long size of a window in milliseconds
 	 */
 	public void blankWindows(List<DataPoints> sensorRawData, long startTime, long endTime, long size) {
+
 		List<DataPoints> tempArray = new ArrayList<DataPoints>();
 		
 		long totalMinutes = ((endTime - startTime)/size);

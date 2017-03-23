@@ -41,7 +41,6 @@ public class VarianceBasedDataQuality {
         }else{
             varianceThreshold = Double.parseDouble(Config.get("MOTIONSENSE_VARIANCE_THRESHOLD"));
         }
-
         if (variance < varianceThreshold) {
             return Integer.parseInt(Config.get("SENSOR_OFF_BODY"));
         }
