@@ -27,7 +27,8 @@ public class DiagnoseData {
 	List<DataPoints> sensorData;
 	List<DataPoints> phoneBatteryData;
 	List<DataPoints> sensorBatteryData;
-
+	long startTime;
+	long endTime;
 	FixedSizeWindowing fixedSizeWindowing;
 	double samplingRate;
 
@@ -40,6 +41,8 @@ public class DiagnoseData {
 		sensorBatteryData = new ArrayList<DataPoints>();
 		fixedSizeWindowing = new FixedSizeWindowing();
 		dataLoader = new DataLoader();
+        this.startTime = startTime;
+        this.endTime = endTime;
 
 		//in future, get this information from a database
 		//TODO
@@ -85,8 +88,8 @@ public class DiagnoseData {
 	private void diagnoseRIPData() {
 		
 		BatteryDataMarker batteryDataMarker = new BatteryDataMarker();
-		SensorUnavailableMarker sensorUnavailable = new SensorUnavailableMarker();
-		SensorAttachmentMarker sensorAttachmentMarker = new SensorAttachmentMarker();
+		SensorUnavailableMarker sensorUnavailable = new SensorUnavailableMarker(this.startTime, this.endTime);
+		SensorAttachmentMarker sensorAttachmentMarker = new SensorAttachmentMarker(this.startTime, this.endTime);
 		DataLossMarker dataLossMarker = new DataLossMarker();
 		SensorDataQualityMarker sensorSignalQualityMarker = new SensorDataQualityMarker();
 		
@@ -114,8 +117,8 @@ public class DiagnoseData {
 	 */
 	private void diagnoseECGData() {
 		BatteryDataMarker batteryDataMarker = new BatteryDataMarker();
-		SensorUnavailableMarker sensorUnavailable = new SensorUnavailableMarker();
-		SensorAttachmentMarker sensorAttachmentMarker = new SensorAttachmentMarker();
+		SensorUnavailableMarker sensorUnavailable = new SensorUnavailableMarker(this.startTime, this.endTime);
+		SensorAttachmentMarker sensorAttachmentMarker = new SensorAttachmentMarker(this.startTime, this.endTime);
 		DataLossMarker dataLossMarker = new DataLossMarker();
 		SensorDataQualityMarker sensorSignalQualityMarker = new SensorDataQualityMarker();
 		
@@ -141,7 +144,7 @@ public class DiagnoseData {
 	 */
 	private void diagnoseMotionsenseData() {
 		BatteryDataMarker batteryDataMarker = new BatteryDataMarker();
-		SensorUnavailableMarker sensorUnavailable = new SensorUnavailableMarker();
+		SensorUnavailableMarker sensorUnavailable = new SensorUnavailableMarker(this.startTime, this.endTime);
 		DataLossMarker dataLossMarker = new DataLossMarker();
 		SensorDataQualityMarker sensorSignalQualityMarker = new SensorDataQualityMarker();
 		
