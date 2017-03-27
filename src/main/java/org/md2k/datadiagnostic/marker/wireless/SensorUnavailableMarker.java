@@ -130,7 +130,6 @@ public class SensorUnavailableMarker {
                 DataStatistics statistics = new DataStatistics(tmp);
                 if (markedWindows.get(i).getQuality() == Integer.parseInt(Config.get("SENSOR_POWERED_OFF"))
                         && markedWindows.get(i - 1).getQuality() != Integer.parseInt(Config.get("SENSOR_POWERED_OFF"))) {
-                    System.out.println(startDCTime + " - " + tmp.size() + " - " + statistics.getVariance());
                 }
                 if (statistics.getVariance() > threshold) {
                     for (int k = i; k < markedWindows.size() - 1; k++) {

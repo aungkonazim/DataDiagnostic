@@ -43,28 +43,34 @@ public class DiagnoseData {
 
 
         if (Config.get("STREAM_NAME").equals("rip")) {
+            System.out.println("Loading/pre-processing RIP data");
             phoneBatteryData = dataLoader.loadCSV(Config.get("PHONE_BATTERY"), startTime, endTime);
             sensorBatteryData = dataLoader.loadCSV(Config.get("AUTOSENSE_BATTERY"), startTime, endTime);
 
             samplingRate = Double.parseDouble(Config.get("RESPIRATION_SAMPLING_RATE"));
             sensorData = dataLoader.loadCSV(Config.get("RIP_DATA"), startTime, endTime);
             fixedSizeWindowing.blankWindows(sensorData, startTime, endTime, Long.parseLong(Config.get("WINDOW_SIZE")));
+            System.out.println("Diagnosing RIP data.");
             diagnoseRIPData();
         } else if (Config.get("STREAM_NAME").equals("ecg")) {
+            System.out.println("Loading/pre-processing ECG data");
             phoneBatteryData = dataLoader.loadCSV(Config.get("PHONE_BATTERY"), startTime, endTime);
             sensorBatteryData = dataLoader.loadCSV(Config.get("AUTOSENSE_BATTERY"), startTime, endTime);
 
             samplingRate = Double.parseDouble(Config.get("ECG_SAMPLING_RATE"));
             sensorData = dataLoader.loadCSV(Config.get("ECG_DATA"), startTime, endTime);
             fixedSizeWindowing.blankWindows(sensorData, startTime, endTime, Long.parseLong(Config.get("WINDOW_SIZE")));
+            System.out.println("Diagnosing ECG data.");
             diagnoseECGData();
         } else if (Config.get("STREAM_NAME").equals("motionsense")) {
+            System.out.println("Loading/pre-processing MotionSense data");
             phoneBatteryData = dataLoader.loadCSV(Config.get("PHONE_BATTERY"), startTime, endTime);
             sensorBatteryData = dataLoader.loadCSV(Config.get("MOTIONSENSE_BATTERY"), startTime, endTime);
 
             samplingRate = Double.parseDouble(Config.get("MOTIONSENSE_SAMPLING_RATE"));
             sensorData = dataLoader.loadWristCSV(Config.get("MOTIONSENSE_ACCELEROMETER"), startTime, endTime);
             fixedSizeWindowing.blankWindows(sensorData, startTime, endTime, Long.parseLong(Config.get("WINDOW_SIZE")));
+            System.out.println("Diagnosing MotionSense data.");
             diagnoseMotionsenseData();
         }
     }
