@@ -16,7 +16,8 @@ public class main {
         long startTime = Util.getStartDayTime(Long.parseLong(Config.get("START_TIME")));
         long endTime = Util.getEndDayTime(Long.parseLong(Config.get("END_TIME")));
 
-        new DiagnoseData(startTime, endTime);
+//        new DiagnoseData(startTime, endTime);
+        new DiagnoseData(0, System.currentTimeMillis());
 
         System.out.println("Diagnostic results are in: " + Config.get("OUTPUT_PATH"));
     }

@@ -44,11 +44,11 @@ public class DiagnoseData {
 
         if (Config.get("STREAM_NAME").equals("rip")) {
             System.out.println("Loading/pre-processing RIP data");
-            phoneBatteryData = dataLoader.loadCSV(Config.get("PHONE_BATTERY"), startTime, endTime);
-            sensorBatteryData = dataLoader.loadCSV(Config.get("AUTOSENSE_BATTERY"), startTime, endTime);
+            phoneBatteryData = dataLoader.loadCSV(Config.getFileName("PHONE_BATTERY"), startTime, endTime);
+            sensorBatteryData = dataLoader.loadCSV(Config.getFileName("AUTOSENSE_BATTERY"), startTime, endTime);
 
             samplingRate = Double.parseDouble(Config.get("RESPIRATION_SAMPLING_RATE"));
-            sensorData = dataLoader.loadCSV(Config.get("RIP_DATA"), startTime, endTime);
+            sensorData = dataLoader.loadCSV(Config.getFileName("RIP_DATA"), startTime, endTime);
             fixedSizeWindowing.blankWindows(sensorData, startTime, endTime, Long.parseLong(Config.get("WINDOW_SIZE")));
             System.out.println("Diagnosing RIP data.");
             diagnoseRIPData();

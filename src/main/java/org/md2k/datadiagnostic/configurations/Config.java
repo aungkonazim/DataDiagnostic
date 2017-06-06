@@ -1,6 +1,7 @@
 package org.md2k.datadiagnostic.configurations;
 
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,8 +15,9 @@ public class Config {
     }*/
 
     public static Properties props = null;
-    public static String get(String propKey){
-        if(props==null) {
+
+    public static String get(String propKey) {
+        if (props == null) {
             props = new Properties();
             InputStream input = null;
 
@@ -40,4 +42,18 @@ public class Config {
         }
         return props.getProperty(propKey);
     }
+
+    public static String getFileName(String propKey) {
+
+        String name = get(propKey);
+        String dir = get("PATH");
+        File dirFile = new File(dir);
+        for (File f : dirFile.listFiles()) {
+            if (f.getName().contains(name))
+                return dir + f.getName();
+        }
+
+        return name;
+    }
+
 }
