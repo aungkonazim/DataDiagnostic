@@ -9,6 +9,8 @@ import org.md2k.datadiagnostic.util.DataStatistics;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.md2k.datadiagnostic.main.main.uid;
+
 /**
  * This class contains algorithms that distinguish various types (e.g., sensor
  * battery down vs. wireless disconnection) of sensor unavailability causes.
@@ -42,9 +44,12 @@ public class SensorUnavailableMarker {
         long timestamp = 0;
         int size;
 
-        accelerometerX = dataLoader.loadCSV(Config.get("AUTOSENSE_ACCELEROMETER_X"), this.startTime, this.endTime);
-        accelerometerY = dataLoader.loadCSV(Config.get("AUTOSENSE_ACCELEROMETER_Y"), this.startTime, this.endTime);
-        accelerometerZ = dataLoader.loadCSV(Config.get("AUTOSENSE_ACCELEROMETER_Z"), this.startTime, this.endTime);
+        String dir = Config.get("PATH");
+        String currDir = dir+uid+"\\";
+
+        accelerometerX = dataLoader.loadCSV(Config.getFileName(currDir, "AUTOSENSE_ACCELEROMETER_X"), this.startTime, this.endTime);
+        accelerometerY = dataLoader.loadCSV(Config.getFileName(currDir, "AUTOSENSE_ACCELEROMETER_Y"), this.startTime, this.endTime);
+        accelerometerZ = dataLoader.loadCSV(Config.getFileName(currDir, "AUTOSENSE_ACCELEROMETER_Z"), this.startTime, this.endTime);
 
         size = Math.max(Math.max(accelerometerX.size(), accelerometerY.size()), accelerometerZ.size());
 
@@ -79,12 +84,13 @@ public class SensorUnavailableMarker {
 
     /**
      * @param markedWindows {@link MarkedDataPoints}
+     * @param currDir
      */
-    public void motionsenseWirelessDC(List<MarkedDataPoints> markedWindows) {
+    public void motionsenseWirelessDC(List<MarkedDataPoints> markedWindows, String currDir) {
         DataLoader dataLoader = new DataLoader();
         List<DataPoints> accelerometerMagnitude = new ArrayList<DataPoints>();
 
-        accelerometerMagnitude = dataLoader.loadWristCSV(Config.get("MOTIONSENSE_ACCELEROMETER"), this.startTime, this.endTime);
+        accelerometerMagnitude = dataLoader.loadWristCSV(Config.getFileName(currDir, "MOTIONSENSE_ACCELEROMETER"), this.startTime, this.endTime);
 
         WirelessDC((List<DataPoints>) accelerometerMagnitude, markedWindows);
 
@@ -112,7 +118,7 @@ public class SensorUnavailableMarker {
             threshold = Double.parseDouble(Config.get("VARIANCE_THRESHOLD_MOTIONSENSE_UNAVAILABLE"));
         }
 
-        for (int i = 0; i < markedWindows.size(); i++) {
+        for (int i = 1; i < markedWindows.size(); i++) {
             if (markedWindows.get(i).getQuality() == Integer.parseInt(Config.get("SENSOR_POWERED_OFF"))) {
                 if (markedWindows.get(i - 1).getQuality() != Integer.parseInt(Config.get("SENSOR_POWERED_OFF"))) {
                     // start disconnection time

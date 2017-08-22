@@ -66,6 +66,8 @@ public class CSVParser implements Iterable<DataPoints> {
        // double data;
         long timestamp;
 
+        System.out.print("Loading file " + filename + "...");
+
         File file = new File(filename);
         Scanner scanner;
         try {
@@ -84,6 +86,8 @@ public class CSVParser implements Iterable<DataPoints> {
             e.printStackTrace();
         }
         Collections.sort(this.data);
+        System.out.println(" ... Complete file size " + data.size());
+
         return this.data;
     }
 

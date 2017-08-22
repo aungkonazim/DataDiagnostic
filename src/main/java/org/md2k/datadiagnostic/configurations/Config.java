@@ -43,13 +43,13 @@ public class Config {
         return props.getProperty(propKey);
     }
 
-    public static String getFileName(String propKey) {
+    public static String getFileName(String dir, String propKey) {
 
         String name = get(propKey);
-        String dir = get("PATH");
+//        String dir = get("PATH");
         File dirFile = new File(dir);
         for (File f : dirFile.listFiles()) {
-            if (f.getName().contains(name))
+            if (f.getName().contains(name) && !f.getName().endsWith(".bz2"))
                 return dir + f.getName();
         }
 

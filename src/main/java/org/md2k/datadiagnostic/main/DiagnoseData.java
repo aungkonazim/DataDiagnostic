@@ -32,7 +32,7 @@ public class DiagnoseData {
     /**
      * Load data and create blank windows for a period of 24 hours
      */
-    public DiagnoseData(long startTime1, long endTime1) {
+    public DiagnoseData(String uid, long startTime1, long endTime1) {
         sensorData = new ArrayList<DataPoints>();
         phoneBatteryData = new ArrayList<DataPoints>();
         sensorBatteryData = new ArrayList<DataPoints>();
@@ -41,37 +41,47 @@ public class DiagnoseData {
         this.startTime = startTime1;
         this.endTime = endTime1;
 
+        String dir = Config.get("PATH");
+        String currDir = dir+uid+"\\";
+        System.out.print(currDir + "...");
 
         if (Config.get("STREAM_NAME").equals("rip")) {
-            System.out.println("Loading/pre-processing RIP data");
-            phoneBatteryData = dataLoader.loadCSV(Config.getFileName("PHONE_BATTERY"), startTime, endTime);
-            sensorBatteryData = dataLoader.loadCSV(Config.getFileName("AUTOSENSE_BATTERY"), startTime, endTime);
+            System.out.println("Loading/pre-processing RIP data...");
+            phoneBatteryData = dataLoader.loadCSV(Config.getFileName(currDir, "PHONE_BATTERY"), startTime, endTime);
+            sensorBatteryData = dataLoader.loadCSV(Config.getFileName(currDir, "AUTOSENSE_BATTERY"), startTime, endTime);
 
             samplingRate = Double.parseDouble(Config.get("RESPIRATION_SAMPLING_RATE"));
-            sensorData = dataLoader.loadCSV(Config.getFileName("RIP_DATA"), startTime, endTime);
+            sensorData = dataLoader.loadCSV(Config.getFileName(currDir, "RIP_DATA"), startTime, endTime);
+            startTime = sensorData.get(0).startTimestamp;
+            endTime = sensorData.get(sensorData.size()-1).startTimestamp;
             fixedSizeWindowing.blankWindows(sensorData, startTime, endTime, Long.parseLong(Config.get("WINDOW_SIZE")));
             System.out.println("Diagnosing RIP data.");
-            diagnoseRIPData();
+            diagnoseRIPData(uid +"rip_diagnostic.txt");
         } else if (Config.get("STREAM_NAME").equals("ecg")) {
             System.out.println("Loading/pre-processing ECG data");
-            phoneBatteryData = dataLoader.loadCSV(Config.get("PHONE_BATTERY"), startTime, endTime);
-            sensorBatteryData = dataLoader.loadCSV(Config.get("AUTOSENSE_BATTERY"), startTime, endTime);
+            phoneBatteryData = dataLoader.loadCSV(Config.getFileName(currDir, "PHONE_BATTERY"), startTime, endTime);
+            sensorBatteryData = dataLoader.loadCSV(Config.getFileName(currDir, "AUTOSENSE_BATTERY"), startTime, endTime);
 
             samplingRate = Double.parseDouble(Config.get("ECG_SAMPLING_RATE"));
-            sensorData = dataLoader.loadCSV(Config.get("ECG_DATA"), startTime, endTime);
+            sensorData = dataLoader.loadCSV(Config.getFileName(currDir, "ECG_DATA"), startTime, endTime);
+            startTime = sensorData.get(0).startTimestamp;
+            endTime = sensorData.get(sensorData.size()-1).startTimestamp;
             fixedSizeWindowing.blankWindows(sensorData, startTime, endTime, Long.parseLong(Config.get("WINDOW_SIZE")));
             System.out.println("Diagnosing ECG data.");
             diagnoseECGData();
         } else if (Config.get("STREAM_NAME").equals("motionsense")) {
             System.out.println("Loading/pre-processing MotionSense data");
-            phoneBatteryData = dataLoader.loadCSV(Config.get("PHONE_BATTERY"), startTime, endTime);
-            sensorBatteryData = dataLoader.loadCSV(Config.get("MOTIONSENSE_BATTERY"), startTime, endTime);
+            phoneBatteryData = dataLoader.loadCSV(Config.getFileName(currDir, "PHONE_BATTERY"), startTime, endTime);
+            sensorBatteryData = dataLoader.loadCSV(Config.getFileName(currDir, "MOTIONSENSE_BATTERY"), startTime, endTime);
 
             samplingRate = Double.parseDouble(Config.get("MOTIONSENSE_SAMPLING_RATE"));
-            sensorData = dataLoader.loadWristCSV(Config.get("MOTIONSENSE_ACCELEROMETER"), startTime, endTime);
+            sensorData = dataLoader.loadWristCSV(Config.getFileName(currDir, "MOTIONSENSE_ACCELEROMETER"), startTime, endTime);
+            startTime = sensorData.get(0).startTimestamp;
+            endTime = sensorData.get(sensorData.size()-1).startTimestamp;
             fixedSizeWindowing.blankWindows(sensorData, startTime, endTime, Long.parseLong(Config.get("WINDOW_SIZE")));
             System.out.println("Diagnosing MotionSense data.");
-            diagnoseMotionsenseData();
+//            diagnoseMotionsenseData(currDir,  uid +"motionsense_left_diagnostic.txt"); // for left wrist
+            diagnoseMotionsenseData(currDir,  uid + "motionsense_right_diagnostic.txt"); // for right wrist
         }
     }
 
@@ -84,7 +94,7 @@ public class DiagnoseData {
      * 5 - Calculate packet loss<br>
      * 6 - Mark sensor data quality<br>
      */
-    private void diagnoseRIPData() {
+    private void diagnoseRIPData(String outputFileName) {
 
         BatteryDataMarker batteryDataMarker = new BatteryDataMarker();
         SensorUnavailableMarker sensorUnavailable = new SensorUnavailableMarker(this.startTime, this.endTime);
@@ -101,7 +111,7 @@ public class DiagnoseData {
 
 
         CSVExporter csvExporter = new CSVExporter();
-        csvExporter.writeMarkedDataPointsToCSV(sensorSignalQualityMarker.markedWindows, Config.get("OUTPUT_PATH"), "rip_diagnostic.txt");
+        csvExporter.writeMarkedDataPointsToCSV(sensorSignalQualityMarker.markedWindows, Config.get("OUTPUT_PATH"), outputFileName);
 
     }
 
@@ -140,8 +150,9 @@ public class DiagnoseData {
      * 3 - Check sensor unavailability<br>
      * 4 - Calculate packet loss<br>
      * 5 - Mark sensor data quality<br>
+     * @param currDir
      */
-    private void diagnoseMotionsenseData() {
+    private void diagnoseMotionsenseData(String currDir, String outputFileName) {
         BatteryDataMarker batteryDataMarker = new BatteryDataMarker();
         SensorUnavailableMarker sensorUnavailable = new SensorUnavailableMarker(this.startTime, this.endTime);
         DataLossMarker dataLossMarker = new DataLossMarker();
@@ -149,12 +160,12 @@ public class DiagnoseData {
 
         batteryDataMarker.phoneBatteryMarker(phoneBatteryData, fixedSizeWindowing.blankWindows);
         batteryDataMarker.motionSenseBatteryMarker(sensorBatteryData, batteryDataMarker.markedWindowsPhone);
-        sensorUnavailable.motionsenseWirelessDC(batteryDataMarker.markedWindowsPhone);
+        sensorUnavailable.motionsenseWirelessDC(batteryDataMarker.markedWindowsPhone, currDir);
         dataLossMarker.packetLoss(batteryDataMarker.markedWindowsMotionsense, Double.parseDouble(Config.get("WINDOW_SIZE")), samplingRate);
         sensorSignalQualityMarker.markWindowsQulaity(dataLossMarker.markedWindows);
 
         CSVExporter csvExporter = new CSVExporter();
-        csvExporter.writeMarkedDataPointsToCSV(sensorSignalQualityMarker.markedWindows, Config.get("OUTPUT_PATH"), "motionsense_diagnostic.txt");
+        csvExporter.writeMarkedDataPointsToCSV(sensorSignalQualityMarker.markedWindows, Config.get("OUTPUT_PATH"), outputFileName);
 
     }
 

@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.DoubleSummaryStatistics;
 import java.util.List;
 
+import static org.md2k.datadiagnostic.main.main.uid;
+
 public class SensorAttachmentMarker {
 
     public final List<MarkedDataPoints> markedWindows;
@@ -33,7 +35,9 @@ public class SensorAttachmentMarker {
         long startTime = 0, endTime = 0;
         List<Double> tmp = new ArrayList<Double>();
         List<DataPoints> galvanicSkingResponse = new ArrayList<DataPoints>();
-        galvanicSkingResponse = dataLoader.loadCSV(Config.get("AUTOSENSE_GSR"), this.startTime, this.endTime);
+        String dir = Config.get("PATH");
+        String currDir = dir+uid+"\\";
+        galvanicSkingResponse = dataLoader.loadCSV(Config.getFileName(currDir, "AUTOSENSE_GSR"), this.startTime, this.endTime);
 
         for (int i = 0; i < markedWindows.size(); i++) {
             if (markedWindows.get(i).getQuality() == 999) {
